@@ -9,7 +9,7 @@ If you find the code useful, please cite:
     @inproceedings{Bilen16,
       author     = "Bilen, H. and Vedaldi, A.",
       title      = "Weakly Supervised Deep Detection Networks',
-      booktitle  = "CVPR',
+      booktitle  = "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition',
       year       = "2016"
     }
 ```
