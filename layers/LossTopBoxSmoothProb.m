@@ -40,17 +40,17 @@ classdef LossTopBoxSmoothProb < dagnn.Loss
         
         bbs = boxes(:,si(2:min(obj.nBoxes,end)))';
         
-        x1 = bbs(:,1);
-        y1 = bbs(:,2);
-        x2 = bbs(:,3);
-        y2 = bbs(:,4);
+        y1 = bbs(:,1);
+        x1 = bbs(:,2);
+        y2 = bbs(:,3);
+        x2 = bbs(:,4);
         
         area = (x2-x1+1) .* (y2-y1+1);
         
-        xx1 = max(gtBox(1), x1);
-        yy1 = max(gtBox(2), y1);
-        xx2 = min(gtBox(3), x2);
-        yy2 = min(gtBox(4), y2);
+        yy1 = max(gtBox(1), y1);
+        xx1 = max(gtBox(2), x1);
+        yy2 = min(gtBox(3), y2);
+        xx2 = min(gtBox(4), x2);
         
         w = max(0.0, xx2-xx1+1);
         h = max(0.0, yy2-yy1+1);
