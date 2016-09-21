@@ -189,6 +189,7 @@ for i=1:numel(imdb.images.name)
   end
   
   if isfield(imdb.images,'boxScores')
+    imdb.images.boxScores{i} = imdb.images.boxScores{i}(isGood);
     imdb.images.boxScores{i} = imdb.images.boxScores{i}(uniqueIdx);
     imdb.images.boxScores{i} = imdb.images.boxScores{i}(1:nB);
   end

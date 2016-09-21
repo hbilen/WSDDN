@@ -6,7 +6,7 @@ function aps = cnn_wsddn_test(varargin)
 
 addpath('layers');
 addpath('pascal');
-addpath(fullfile('Layers','matlab'));
+addpath(fullfile('layers','matlab'));
 run(fullfile('matconvnet', 'matlab', 'vl_setupnn.m')) ;
 addpath(fullfile('matconvnet','examples'));
 
@@ -200,6 +200,7 @@ for i=1:numel(imdb.images.name)
   end
   
   if isfield(imdb.images,'boxScores')
+    imdb.images.boxScores{i} = imdb.images.boxScores{i}(isGood);
     imdb.images.boxScores{i} = imdb.images.boxScores{i}(uniqueIdx);
     imdb.images.boxScores{i} = imdb.images.boxScores{i}(1:nB);
   end
