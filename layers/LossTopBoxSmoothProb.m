@@ -84,8 +84,8 @@ classdef LossTopBoxSmoothProb < dagnn.Loss
         derC = bsxfun(@minus,inputs{1}(:,:,:,obj.boxIdx{c}),inputs{1}(:,:,:,obj.gtIdx{c}));
         derC = bsxfun(@times,...
           reshape(obj.probs{c},[1 1 1 numel(obj.probs{c})]),derC));
-        derInputs{1}(:,:,:,obj.boxIdx{c}) += derC
-        derInputs{1}(:,:,:,obj.gtIdx{c}) += -sum(derC,4);
+        derInputs{1}(:,:,:,obj.boxIdx{c}) = derInputs{1}(:,:,:,obj.boxIdx{c})+derC
+        derInputs{1}(:,:,:,obj.gtIdx{c}) = derInputs{1}(:,:,:,obj.gtIdx{c})-sum(derC,4);
 
       end
       derInputs{1} = derInputs{1} * derOutputs{1};
