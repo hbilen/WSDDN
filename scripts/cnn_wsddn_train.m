@@ -58,9 +58,10 @@ nopts.softmaxTempDet = opts.softmaxTempDet; % softmax temp for det
 
 net = load(opts.modelPath);
 net = prepare_wsddn(net,nopts);
-
+opts.train.derOutputs = {'objective', 1};
 if nopts.addLossSmooth
-  opts.train.derOutputs = {'objective', 1, 'lossTopB', 1e-4} ;
+  opts.train.derOutputs{end+1} = 'lossTopB';
+  opts.train.derOutputs{end+1} = 1e-4 ;
 end
 
 if isfield(net,'normalization')
@@ -113,6 +114,7 @@ valIdx = [];
 %% 
 bopts.useGpu = numel(opts.train.gpus) >  0 ;
 bopts.prefetch = opts.train.prefetch;
+bopts.addLossSmooth = opts.addLossSmooth;
 
 info = cnn_train_dag(net, imdb, @(i,b) ...
   getBatch(bopts,i,b), ...
@@ -158,9 +160,12 @@ if opts.useGpu > 0
   rois = gpuArray(rois) ;
 end
 
-inputs = {'input', im, 'label', labels, 'rois', rois, 'ids', batch, ...
-    'boxes', imdb.images.boxes{batch}} ;
-  
+inputs = {'input', im, 'label', labels, 'rois', rois, 'ids', batch};
+
+if bopts.addLossSmooth
+  inputs{end+1} = 'boxes';
+  inputs{end+1} = imdb.images.boxes{batch} ;
+end
   
 if isfield(imdb.images,'boxScores')
   boxScore = reshape(imdb.images.boxScores{batch},[1 1 1 numel(imdb.images.boxScores{batch})]);
