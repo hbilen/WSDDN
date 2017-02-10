@@ -65,7 +65,7 @@ maxH = 0;
 
 for b=1:numel(batch)
   
-  hw = imdb.images.size(batch(1),:);
+  hw = imdb.images.size(batch(b),:);
   h = hw(1);
   w = hw(2);
   
