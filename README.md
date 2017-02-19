@@ -21,7 +21,7 @@ If you find the code useful, please cite:
     git clone --recursive  https://github.com/hbilen/WSDDN
     ```
     
-2. Compile matconvnet toolbox using `cnn_wsddn_compile`: (see the options in [http://www.vlfeat.org/matconvnet/install/](http://www.vlfeat.org/matconvnet/install/)
+2. Compile matconvnet toolbox using `cnn_wsddn_compilenn`: (see the options in [http://www.vlfeat.org/matconvnet/install/](http://www.vlfeat.org/matconvnet/install/)
 
 3. If you want to train or test on the PASCAL VOC,
 

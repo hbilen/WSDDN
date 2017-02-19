@@ -1,4 +1,4 @@
-function vl_compilenn_wsddn(varargin)
+function vl_wsddn_compilenn(varargin)
 %VL_COMPILENN Compile the MatConvNet toolbox.
 %   The `vl_compilenn()` function compiles the MEX files in the
 %   MatConvNet toolbox. See below for the requirements for compiling

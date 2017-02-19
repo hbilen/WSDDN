@@ -5,7 +5,7 @@ function cnn_wsddn_demo(varargin)
 
 addpath('layers');
 addpath('pascal');
-addpath(fullfile('Layers','matlab'));
+addpath(fullfile('layers','matlab'));
 run(fullfile('matconvnet', 'matlab', 'vl_setupnn.m')) ;
 addpath(fullfile('matconvnet','examples'));
 

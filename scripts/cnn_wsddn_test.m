@@ -27,7 +27,7 @@ opts.numFetchThreads = 1 ;
 opts = vl_argparse(opts, varargin) ;
 
 display(opts);
-if ~exist(fullfile(opts.dataDir,'VOCdevkit','VOCcode','VOCinit'),'file')
+if ~exist(fullfile(opts.dataDir,'VOCdevkit','VOCcode','VOCinit.m'),'file')
   error('VOCdevkit is not installed');
 end
 addpath(fullfile(opts.dataDir,'VOCdevkit','VOCcode'));
