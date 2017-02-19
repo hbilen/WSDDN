@@ -162,7 +162,7 @@ end
 
 inputs = {'input', im, 'label', labels, 'rois', rois, 'ids', batch};
 
-if bopts.addLossSmooth
+if opts.addLossSmooth
   inputs{end+1} = 'boxes';
   inputs{end+1} = imdb.images.boxes{batch} ;
 end
