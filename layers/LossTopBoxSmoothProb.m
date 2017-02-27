@@ -65,8 +65,9 @@ classdef LossTopBoxSmoothProb < dagnn.Loss
         obj.boxIdx{c} = si(o+1);
         obj.probs{c} = so(o+1);
         d = bsxfun(@minus,inputs{1}(:,:,:,obj.boxIdx{c}),inputs{1}(:,:,:,obj.gtIdx{c}));
+        d = d.^2
         d = bsxfun(@times,d,obj.probs{c});
-        outputs{1} = outputs{1} + 0.5 * sum(d(:).^2);
+        outputs{1} = outputs{1} + 0.5 * sum(d(:));
       end
       
       n = obj.numAveraged ;
@@ -80,11 +81,11 @@ classdef LossTopBoxSmoothProb < dagnn.Loss
       derInputs{1} = zeros(size(inputs{1}),'like',inputs{1});
       for c=1:numel(obj.boxIdx)
         if isempty(obj.boxIdx{c}), continue; end
-        derInputs{1}(:,:,:,obj.boxIdx{c}) = ...
-          bsxfun(@minus,inputs{1}(:,:,:,obj.boxIdx{c}),inputs{1}(:,:,:,obj.gtIdx{c}));
-        derInputs{1}(:,:,:,obj.boxIdx{c}) = bsxfun(@times,...
-          reshape(obj.probs{c},[1 1 1 numel(obj.probs{c})]),derInputs{1}(:,:,:,obj.boxIdx{c}));
-        derInputs{1}(:,:,:,obj.gtIdx{c}) = -sum(derInputs{1}(:,:,:,obj.boxIdx{c}),4);
+        derC = bsxfun(@minus,inputs{1}(:,:,:,obj.boxIdx{c}),inputs{1}(:,:,:,obj.gtIdx{c}));
+        derC = bsxfun(@times,...
+          reshape(obj.probs{c},[1 1 1 numel(obj.probs{c})]),derC));
+        derInputs{1}(:,:,:,obj.boxIdx{c}) = derInputs{1}(:,:,:,obj.boxIdx{c})+derC
+        derInputs{1}(:,:,:,obj.gtIdx{c}) = derInputs{1}(:,:,:,obj.gtIdx{c})-sum(derC,4);
 
       end
       derInputs{1} = derInputs{1} * derOutputs{1};
