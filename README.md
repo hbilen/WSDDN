@@ -1,31 +1,18 @@
 # Weakly Supervised Deep Detection Networks (WSDDN)
 
 
-
-## Citing WSDDN
-If you find the code useful, please cite:
-
-```latex
-    @inproceedings{Bilen16,
-      author     = "Bilen, H. and Vedaldi, A.",
-      title      = "Weakly Supervised Deep Detection Networks',
-      booktitle  = "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition',
-      year       = "2016"
-    }
-```
-
 ## Installation
-1. Clone WSDDN repository:
+1. Download and install [MatConvNet](http://www.vlfeat.org/matconvnet/install/)
+2. Install this module with the package manager of MatConvNet [`vl_contrib`](http://www.vlfeat.org/matconvnet/mfiles/vl_contrib/#notes):
 
-    ```Shell
-    git clone --recursive  https://github.com/hbilen/WSDDN
-    ```
-    
-2. Compile matconvnet toolbox using `cnn_wsddn_compilenn`: (see the options in [http://www.vlfeat.org/matconvnet/install/](http://www.vlfeat.org/matconvnet/install/)
+```
+    vl_contrib('install', 'WSDDN') ;
+    vl_contrib('setup', 'WSDDN') ;
+```
 
 3. If you want to train or test on the PASCAL VOC,
 
-    a.  Download the PASCAL VOC 2007 devkit and dataset [http://host.robots.ox.ac.uk/pascal/VOC/](http://host.robots.ox.ac.uk/pascal/VOC/) under `data` folder
+    a.  Download the [PASCAL VOC 2007 devkit and dataset](http://host.robots.ox.ac.uk/pascal/VOC/) under `data` folder
 
     b.  Download the pre-computed edge-boxes from the links below (for trainval and test splits):
 
@@ -47,7 +34,7 @@ After completing the installation and downloading the required files, you are re
             opts.modelPath = '....' ;
             opts.imdbPath = '....' ;
             opts.train.gpus = .... ;
-            cnn_wsddn_demo(opts) ;
+            wsddn_demo(opts) ;
                         
 ```
 
@@ -58,7 +45,7 @@ After completing the installation and downloading the required files, you are re
             opts.modelPath = '....' ;
             opts.imdbPath = '....' ;
             opts.train.gpus = .... ;
-            cnn_wsddn_test(opts) ;
+            wsddn_test(opts) ;
                         
 ```
 
@@ -71,8 +58,20 @@ Download an ImageNet pre-trained model from [http://www.vlfeat.org/matconvnet/pr
             opts.modelPath = '....' ;
             opts.imdbPath = '....' ;
             opts.train.gpus = .... ;
-            [net,info] = cnn_wsddn_train(opts) ;
+            [net,info] = wsddn_train(opts) ;
                         
+```
+
+## Citing WSDDN
+If you find the code useful, please cite:
+
+```latex
+    @inproceedings{Bilen16,
+      author     = "Bilen, H. and Vedaldi, A.",
+      title      = "Weakly Supervised Deep Detection Networks',
+      booktitle  = "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition',
+      year       = "2016"
+    }
 ```
 
 
