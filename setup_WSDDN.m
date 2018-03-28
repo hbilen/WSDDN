@@ -3,6 +3,6 @@ function setup_WSDDN()
 
 root = fileparts(mfilename('fullpath')) ;
 addpath(root, [root '/matlab'], [root '/pascal'], [root '/core']) ;
-%addpath([vl_rootnn '/matlab/mex']) ; % tmp fix for compiler
-addpath([vl_rootnn '/examples/fast_rcnn/bbox_functions']) ;
-addpath([root '/imagenet']) ;
+addpath([vl_rootnn '/examples/']) ;
+addpath([vl_rootnn '/examples/imagenet/']) ;
+
