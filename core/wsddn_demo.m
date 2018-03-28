@@ -1,6 +1,6 @@
 function wsddn_demo(varargin)
 % @author: Hakan Bilen
-% cnn_wsddn_demo : this script shows a detection demo
+% wsddn_demo : this script shows a detection demo
 
 
 %addpath('layers');
@@ -20,7 +20,7 @@ opts.maxNumProposals = inf; % limit number
 % opts.imageScales = [480,576,688,864,1200]; % scales
 opts.imageScales = [480,576,688,864,1200]; % scales
 
-opts.train.gpus = [] ;
+opts.gpu = [] ;
 opts.train.prefetch = true ;
 
 opts.numFetchThreads = 1 ;
@@ -39,7 +39,8 @@ net = load(opts.modelPath);
 net = dagnn.DagNN.loadobj(net) ;
 
 net.mode = 'test' ;
-if ~isempty(opts.train.gpus)
+if ~isempty(opts.gpu)
+  gpuDevice(opts.gpu) ;
   net.move('gpu') ;
 end
 

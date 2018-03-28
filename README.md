@@ -14,15 +14,10 @@
 
     a.  Download the [PASCAL VOC 2007 devkit and dataset](http://host.robots.ox.ac.uk/pascal/VOC/) under `data` folder
 
-    b.  Download the pre-computed edge-boxes from the links below (for trainval and test splits):
+    b.  Download the pre-computed edge-boxes for [trainval](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/EdgeBoxesVOC2007trainval.mat) and [test](http://groups.inf.ed.ac.uk/hbilen-data/WSDDN/EdgeBoxesVOC2007test.mat) splits:
 
-      [https://drive.google.com/open?id=0B0evBVYO74MENXZCWnZmT2kyUEE](https://drive.google.com/open?id=0B0evBVYO74MENXZCWnZmT2kyUEE)
-      
-      [https://drive.google.com/open?id=0B0evBVYO74MEMUluNm4tamEyMHM](https://drive.google.com/open?id=0B0evBVYO74MEMUluNm4tamEyMHM)
+    c. Download the pre-trained network ([VGGF-EB-BoxSc-SpReg](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/wsddn.mat)). Note that it gives slightly different performance reported than in the paper (34.4% mAP instead of 34.4% mAP)
 
-    c. Download the pre-trained network (VGGF-EB-BoxSc-SpReg). Note that it gives slightly better performance reported than in the paper (35.3% mAP instead of 34.5% mAP)
-
-      [https://drive.google.com/open?id=0B0evBVYO74MEdjJVR19URUNFOGc](https://drive.google.com/open?id=0B0evBVYO74MEdjJVR19URUNFOGc)
 
 
 ## Demo
@@ -33,7 +28,7 @@ After completing the installation and downloading the required files, you are re
             cd scripts;
             opts.modelPath = '....' ;
             opts.imdbPath = '....' ;
-            opts.train.gpus = .... ;
+            opts.gpu = .... ;
             wsddn_demo(opts) ;
                         
 ```
@@ -44,7 +39,8 @@ After completing the installation and downloading the required files, you are re
             addpath scripts;
             opts.modelPath = '....' ;
             opts.imdbPath = '....' ;
-            opts.train.gpus = .... ;
+            opts.gpu = .... ;
+            opts.vis = true ; % visualize
             wsddn_test(opts) ;
                         
 ```

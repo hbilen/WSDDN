@@ -151,18 +151,17 @@ info = cnn_train_dag(net, imdb, @(i,b) ...
 %% -------------------------------------------------------------------
 %                                                       Deploy network
 % --------------------------------------------------------------------
-removeLoss = {'LossTopBoxSmooth','loss','mAP'};
-for i=1:numel(removeLoss)
-  if sum(arrayfun(@(a) strcmp(a.name, removeLoss{i}), net.layers)==1)
-    net.removeLayer(removeLoss{i});
+if ~exist(fullfile(opts.expDir,'net.mat'),'file')
+  removeLoss = {'dagnn.Loss','dagnn.DropOut'};
+  for i=1:numel(removeLoss)
+    dagRemoveLayersOfType(net,removeLoss{i}) ;
   end
+  
+  net.mode = 'test' ;
+  net_ = net ;
+  net = net_.saveobj() ;
+  save(fullfile(opts.expDir,'net.mat'), '-struct','net');
 end
-
-net.mode = 'test' ;
-net_ = net ;
-net = net_.saveobj() ;
-save(fullfile(opts.expDir,'net.mat'), '-struct','net');
-
 % --------------------------------------------------------------------
 function inputs = getBatch(opts, imdb, batch)
 % --------------------------------------------------------------------
@@ -228,7 +227,7 @@ end
 
 % -------------------------------------------------------------------------
 function imdb = fixBBoxes(imdb, minSize, maxNum)
-
+% -------------------------------------------------------------------------
 for i=1:numel(imdb.images.name)
   bbox = imdb.images.boxes{i};
   % remove small bbox
@@ -254,4 +253,23 @@ for i=1:numel(imdb.images.name)
   %   [h,w,~] = size(imdb.images.data{i});
   %   imdb.images.boxes{i} = [1 1 h w];
   
+end
+
+% -------------------------------------------------------------------------
+function layers = dagFindLayersOfType(net, type)
+% -------------------------------------------------------------------------
+layers = [] ;
+for l = 1:numel(net.layers)
+  if isa(net.layers(l).block, type)
+    layers{1,end+1} = net.layers(l).name ;
+  end
+end
+% -------------------------------------------------------------------------
+function dagRemoveLayersOfType(net, type)
+% -------------------------------------------------------------------------
+names = dagFindLayersOfType(net, type) ;
+for i = 1:numel(names)
+  layer = net.layers(net.getLayerIndex(names{i})) ;
+  net.removeLayer(names{i}) ;
+  net.renameVar(layer.outputs{1}, layer.inputs{1}, 'quiet', true) ;
 end

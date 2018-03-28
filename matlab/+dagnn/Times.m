@@ -22,6 +22,15 @@ classdef Times < dagnn.ElementWise
       obj.load(varargin) ;
     end
     
+    function rfs = getReceptiveFields(obj)
+      rfs.size = [1 1] ;
+      rfs.stride = [1 1] ;
+      rfs.offset = [1 1] ;
+    end
+
+    function outputSizes = getOutputSizes(obj, inputSizes)
+      outputSizes = inputSizes(1) ;
+    end
   end
   
 end

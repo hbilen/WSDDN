@@ -107,8 +107,6 @@ if isempty(opts.averageImage)
   avgIm = [];
 elseif numel(opts.averageImage)==depth
   avgIm = opts.averageImage;
-else
-  avgIm = single(imssize(opts.averageImage,[maxH,maxW],'Method',opts.interpolation));
 end
 
 
@@ -118,14 +116,12 @@ for b=1:numel(batch)
   imo(1:sz(1),1:sz(2),:,b) = single(ims{b});
   
   if ~isempty(avgIm)
-    if numel(opts.averageImage)==size(imo,3)
-      imo(1:sz(1),1:sz(2),:,b) = single(bsxfun(@minus,imo(1:sz(1),1:sz(2),:,b),opts.averageImage));
-    else
-      imo(1:sz(1),1:sz(2),:,b) = imo(1:sz(1),1:sz(2),:,b) - avgIm(1:sz(1),1:sz(2),:);
-    end
-  
+    imo(1:sz(1),1:sz(2),:,b) = single(bsxfun(@minus,imo(1:sz(1),1:sz(2),:,b),opts.averageImage));
   end
-
+  if ~isempty(opts.rgbVariance)
+    imo(1:sz(1),1:sz(2),:,b) = bsxfun(@plus, imo(1:sz(1),1:sz(2),:,b), ...
+        reshape(opts.rgbVariance * randn(3,1), 1,1,3)) ;
+  end
 end
 
 

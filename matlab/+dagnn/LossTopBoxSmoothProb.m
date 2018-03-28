@@ -94,6 +94,7 @@ classdef LossTopBoxSmoothProb < dagnn.Loss
     
     function obj = LossTopBoxSmoothProb(varargin)
       obj.load(varargin) ;
+      obj.loss = 'LossTopBoxSmoothProb';
     end
     
     function reset(obj)

@@ -20,7 +20,7 @@ opts.proposalDir = fullfile('data','SSW');
 opts.maxNumProposals = inf; % limit number
 opts.imageScales = [480,576,688,864,1200]; % scales
 
-opts.train.gpus = [] ;
+opts.gpu = [] ;
 opts.train.prefetch = true ;
 opts.vis = 0 ;
 opts.numFetchThreads = 1 ;
@@ -43,7 +43,8 @@ end
 net = dagnn.DagNN.loadobj(net) ;
 
 net.mode = 'test' ;
-if ~isempty(opts.train.gpus)
+if ~isempty(opts.gpu)
+  gpuDevice(opts.gpu) ;
   net.move('gpu') ;
 end
 
@@ -53,12 +54,14 @@ else
   bopts = net.meta.normalization;
 end
 
+bopts.rgbVariance = [] ;
 bopts.interpolation = net.meta.normalization.interpolation;
 bopts.jitterBrightness = 0 ;
 bopts.imageScales = opts.imageScales;
 bopts.numThreads = opts.numFetchThreads;
-bs = find(arrayfun(@(a) isa(a.block, 'BiasSamples'), net.layers)==1);
+bs = find(arrayfun(@(a) isa(a.block, 'dagnn.BiasSamples'), net.layers)==1);
 bopts.addBiasSamples = ~isempty(bs) ;
+bopts.vgg16 = any(arrayfun(@(a) strcmp(a.name, 'relu5'), net.layers)==1) ;
 % -------------------------------------------------------------------------
 %                                                   Database initialization
 % -------------------------------------------------------------------------
@@ -91,7 +94,7 @@ if strcmp(VOCopts.testset,'test')
 elseif strcmp(VOCopts.testset,'trainval')
   testIdx = find(imdb.images.set < 3);
 end
-bopts.useGpu = numel(opts.train.gpus) >  0 ;
+bopts.useGpu = numel(opts.gpu) >  0 ;
 
 scores = cell(1,numel(testIdx));
 boxes = imdb.images.boxes(testIdx);
@@ -142,17 +145,8 @@ for t=1:numel(testIdx)
       figure(1) ;
       im = bbox_draw(im,boxesSc(1,[2 1 4 3 5]));
       fprintf('%s %.2f',cats{cls},boxesSc(1,5));
-      
-%       if numel(pick)>2
-%         im = bbox_draw(im,boxesSc(1:3,[2 1 4 3 5]),'b',2);
-% %         im = bbox_draw(im,boxesSc(3,[2 1 4 3 5]),'g',2);
-% %         fprintf(' %.2f',boxesSc(2,5));
-% %         fprintf(' %.2f',boxesSc(3,5));
-%       end
+     
       fprintf('\n') ;
-%       im = bbox_draw(im,boxesSc(1,1:4),[0 0 255],2);
-      
-%       imshow(im);
       title(cats{cls});
       pause;
 
@@ -202,6 +196,8 @@ function inputs = getBatch(opts, imdb, batch, scale, flip)
 
 opts.scale = scale;
 opts.flip = flip;
+is_vgg16 = opts.vgg16 ;
+opts = rmfield(opts,'vgg16') ;
 
 images = strcat([imdb.imageDir filesep], imdb.images.name(batch)) ;
 opts.prefetch = (nargout == 0);
@@ -218,10 +214,13 @@ rois = rois([1 3 2 5 4],:) ;
 
 
 ss = [16 16] ;
-% o0 = 18 ;
-% o1 = 9.5 ;
-o0 = 8.5 ;
-o1 = 9.5 ;
+if is_vgg16
+  o0 = 8.5 ;
+  o1 = 9.5 ;
+else
+  o0 = 18 ;
+  o1 = 9.5 ;
+end
 rois = [ rois(1,:);
         floor((rois(2,:) - o0 + o1) / ss(1) + 0.5) + 1;
         floor((rois(3,:) - o0 + o1) / ss(2) + 0.5) + 1;
