@@ -19,7 +19,7 @@ classdef LossTopBoxSmoothProb < dagnn.Loss
       obj.gtIdx = [];
       obj.boxIdx = [];
       obj.probs = [];
-      boxes  = gather(inputs{2})';
+      boxes  = double(gather(inputs{2})');
       scores = gather(squeeze(inputs{3}));
       labels = gather(squeeze(inputs{4}));
       
