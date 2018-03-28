@@ -16,7 +16,7 @@
 
     b.  Download the pre-computed edge-boxes for [trainval](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/EdgeBoxesVOC2007trainval.mat) and [test](http://groups.inf.ed.ac.uk/hbilen-data/WSDDN/EdgeBoxesVOC2007test.mat) splits:
 
-    c. Download the pre-trained network ([VGGF-EB-BoxSc-SpReg](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/wsddn.mat)). Note that it gives slightly different performance reported than in the paper (34.4% mAP instead of 34.4% mAP)
+    c. Download the pre-trained network ([VGGF-EB-BoxSc-SpReg](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/wsddn.mat)). Note that it gives slightly different performance reported than in the paper (34.4% mAP instead of 34.5% mAP)
 
 
 
