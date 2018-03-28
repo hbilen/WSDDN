@@ -10,14 +10,15 @@
     vl_contrib('setup', 'WSDDN') ;
 ```
 
-3. If you want to train or test on the PASCAL VOC,
+3. If you want to train a WSDDN model, `wsddn_train` will automatically download the items below:
 
-    a.  Download the [PASCAL VOC 2007 devkit and dataset](http://host.robots.ox.ac.uk/pascal/VOC/) under `data` folder
+    a.  [PASCAL VOC 2007 devkit and dataset](http://host.robots.ox.ac.uk/pascal/VOC/) under `data` folder
 
-    b.  Download the pre-computed edge-boxes for [trainval](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/EdgeBoxesVOC2007trainval.mat) and [test](http://groups.inf.ed.ac.uk/hbilen-data/WSDDN/EdgeBoxesVOC2007test.mat) splits:
+    b.  Pre-computed edge-boxes for [trainval](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/EdgeBoxesVOC2007trainval.mat) and [test](http://groups.inf.ed.ac.uk/hbilen-data/WSDDN/EdgeBoxesVOC2007test.mat) splits:
 
-    c. Download the pre-trained network ([VGGF-EB-BoxSc-SpReg](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/wsddn.mat)). Note that it gives slightly different performance reported than in the paper (34.4% mAP instead of 34.5% mAP)
+    c. Pre-trained network from [MatConvNet website](http://www.vlfeat.org/matconvnet/models)
 
+4. You can also download the pre-trained WSDDN model ([VGGF-EB-BoxSc-SpReg](http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/wsddn.mat)). Note that it gives slightly different performance reported than in the paper (34.4% mAP instead of 34.5% mAP)
 
 
 ## Demo

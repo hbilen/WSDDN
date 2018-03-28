@@ -55,6 +55,27 @@ if ~exist(opts.dataDir,'dir')
   error('wrong data folder!');
 end
 
+if ~exist(opts.dataDir,'dir')
+  error('wrong data folder!');
+end
+
+% Download VOC Devkit and data
+if ~exist(fullfile(opts.dataDir,'VOCdevkit'),'dir')
+  files = {'VOCtest_06-Nov-2007.tar',...
+           'VOCtrainval_06-Nov-2007.tar',...
+           'VOCdevkit_08-Jun-2007.tar'} ;
+  for i=1:numel(files)
+    if ~exist(fullfile(opts.dataDir, files{i}), 'file')
+      outPath = fullfile(opts.dataDir,files{i}) ;
+      url = sprintf('http://host.robots.ox.ac.uk/pascal/VOC/voc2007/%s',files{i}) ;
+      fprintf('Downloading %s to %s\n', url, outPath) ;
+      urlwrite(url,outPath) ;
+      untar(outPath,opts.dataDir);
+    end
+  end
+end
+addpath(fullfile(opts.dataDir, 'VOCdevkit', 'VOCcode'));
+
 traindata = importdata(fullfile(opts.dataDir,'VOCdevkit','VOC2007','ImageSets','Main','train.txt'));
 valdata = importdata(fullfile(opts.dataDir,'VOCdevkit','VOC2007','ImageSets','Main','val.txt'));
 testdata = importdata(fullfile(opts.dataDir,'VOCdevkit','VOC2007','ImageSets','Main','test.txt'));

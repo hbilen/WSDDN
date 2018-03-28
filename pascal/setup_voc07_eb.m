@@ -12,23 +12,23 @@ opts = vl_argparse(opts, varargin) ;
 % -------------------------------------------------------------------------
 %                                                 Load selective search win
 % -------------------------------------------------------------------------
-%% get selective search windows
+%% Get selective search windows
 files = {'EdgeBoxesVOC2007trainval.mat', ...
   'EdgeBoxesVOC2007test.mat'} ;
 
-% if ~exist(opts.proposalDir, 'dir')
-%   mkdir(opts.proposalDir) ;
-% end
-
-% please first download links
-% https://drive.google.com/open?id=0B0evBVYO74MENXZCWnZmT2kyUEE
-% https://drive.google.com/file/d/0B0evBVYO74MEMUluNm4tamEyMHM
+if ~exist(opts.proposalDir, 'dir')
+  mkdir(opts.proposalDir) ;
+end
 
 for i=1:numel(files)
-  if ~exist(fullfile(opts.proposalDir, files{i}), 'file')
-    error('please download files from https://drive.google.com/open?id=0B0evBVYO74MENXZCWnZmT2kyUEE and https://drive.google.com/file/d/0B0evBVYO74MEMUluNm4tamEyMHM');
+  outPath = fullfile(opts.proposalDir, files{i}) ;
+  if ~exist(outPath, 'file')
+    url = sprintf('http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/%s',files{i}) ;
+    fprintf('Downloading %s to %s\n', url, outPath) ;
+    urlwrite(url,outPath) ;
   end
 end
+
 
 if ~isempty(opts.proposalDir)
   t1 = load([opts.proposalDir,filesep,files{1}]);
@@ -59,6 +59,23 @@ cats = {'aeroplane','bicycle','bird','boat','bottle','bus','car',...
 if ~exist(opts.dataDir,'dir')
   error('wrong data folder!');
 end
+
+% Download VOC Devkit and data
+if ~exist(fullfile(opts.dataDir,'VOCdevkit'),'dir')
+  files = {'VOCtest_06-Nov-2007.tar',...
+           'VOCtrainval_06-Nov-2007.tar',...
+           'VOCdevkit_08-Jun-2007.tar'} ;
+  for i=1:numel(files)
+    if ~exist(fullfile(opts.dataDir, files{i}), 'file')
+      outPath = fullfile(opts.dataDir,files{i}) ;
+      url = sprintf('http://host.robots.ox.ac.uk/pascal/VOC/voc2007/%s',files{i}) ;
+      fprintf('Downloading %s to %s\n', url, outPath) ;
+      urlwrite(url,outPath) ;
+      untar(outPath,opts.dataDir);
+    end
+  end
+end
+addpath(fullfile(opts.dataDir, 'VOCdevkit', 'VOCcode'));
 
 traindata = importdata(fullfile(opts.dataDir,'VOCdevkit','VOC2007','ImageSets','Main','train.txt'));
 valdata = importdata(fullfile(opts.dataDir,'VOCdevkit','VOC2007','ImageSets','Main','val.txt'));

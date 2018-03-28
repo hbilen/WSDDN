@@ -7,7 +7,7 @@ opts.expDir = fullfile(vl_rootnn, 'exp') ;
 opts.imdbPath = fullfile(vl_rootnn, 'data', 'imdbs', 'imdb-eb.mat');
 opts.modelPath = fullfile(vl_rootnn, 'models', 'imagenet-vgg-f.mat') ;
 opts.proposalType = 'eb' ;
-opts.proposalDir = fullfile(vl_rootnn, 'data','EdgeBoxes') ;
+opts.proposalDir = fullfile(vl_rootnn, 'data', 'EdgeBoxes') ;
 
 
 opts.addBiasSamples = 1; % add Box Scores
@@ -44,11 +44,11 @@ if exist(opts.imdbPath,'file')==2
   imdb = load(opts.imdbPath) ;
 else
   if strcmp(opts.proposalType,'ssw')
-    imdb = cnn_voc07_ssw_setup_data('dataDir',opts.dataDir, ...
+    imdb = setup_voc07_ssw('dataDir',opts.dataDir, ...
       'proposalDir',opts.proposalDir,'loadTest',1);
   elseif strcmp(opts.proposalType,'eb')
-  imdb = cnn_voc07_eb_setup_data('dataDir',opts.dataDir, ...
-    'proposalDir',opts.proposalDir,'loadTest',1);
+    imdb = setup_voc07_eb('dataDir',opts.dataDir, ...
+      'proposalDir',opts.proposalDir,'loadTest',1);
   else
     error('undefined proposal type %s\n',opts.proposalType)
   end
@@ -101,6 +101,16 @@ nopts.averageImage = reshape(rgbMean,[1 1 3]) ;
 nopts.rgbVariance = 0.1 * rgbDeviation ;
 nopts.numClasses = numel(imdb.classes.name) ;
 nopts.classNames = imdb.classes.name ;
+
+if ~exist(opts.modelPath,'file')
+  [pname,fname,ext]  = fileparts(opts.modelPath) ;
+  if ~exist(pname,'dir')
+    mkdir(pname) ;
+  end
+  fprintf('Downloading %s to %s\n', [fname ext], pname) ;
+  urlwrite(sprintf('http://www.vlfeat.org/matconvnet/models/%s',[fname ext]),...
+    opts.modelPath) ;
+end
 
 net = load(opts.modelPath);
 net = wsddn_init(net,nopts);
