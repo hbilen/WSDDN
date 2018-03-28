@@ -2,16 +2,12 @@ function [net, info] = wsddn_train(varargin)
 % @author: Hakan Bilen
 % wsddn_train: training script for WSDDN
 
-run(fullfile('matconvnet', 'matlab', 'vl_setupnn.m')) ;
-addpath('matconvnet','examples') ;
-addpath('matconvnet','examples','imagenet') ;
-
-opts.dataDir = fullfile('data') ;
-opts.expDir = fullfile('exp') ;
-opts.imdbPath = fullfile('imdbs', 'imdb-eb.mat');
-opts.modelPath = fullfile('models', 'imagenet-vgg-f.mat') ;
+opts.dataDir = fullfile(vl_rootnn, 'data') ;
+opts.expDir = fullfile(vl_rootnn, 'exp') ;
+opts.imdbPath = fullfile(vl_rootnn, 'data', 'imdbs', 'imdb-eb.mat');
+opts.modelPath = fullfile(vl_rootnn, 'models', 'imagenet-vgg-f.mat') ;
 opts.proposalType = 'eb' ;
-opts.proposalDir = fullfile('data','EdgeBoxes') ;
+opts.proposalDir = fullfile(vl_rootnn, 'data','EdgeBoxes') ;
 
 
 opts.addBiasSamples = 1; % add Box Scores

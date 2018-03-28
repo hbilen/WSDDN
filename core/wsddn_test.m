@@ -3,18 +3,12 @@ function aps = wsddn_test(varargin)
 % wsddn_test : this script evaluates detection performance in PASCAL VOC
 % dataset for given a WSDDN model
 
-
-addpath('matlab');
-addpath('pascal');
-% addpath(fullfile('layers','matlab'));
-run(fullfile('matconvnet', 'matlab', 'vl_setupnn.m')) ;
-addpath(fullfile('matconvnet','examples'));
-
-opts.dataDir = fullfile('data') ;
-opts.expDir = fullfile('exp') ;
-opts.imdbPath = fullfile('imdbs', 'imdb-eb.mat');
-opts.modelPath = fullfile('models', 'imagenet-vgg-f.mat') ;
-opts.proposalDir = fullfile('data','SSW');
+opts.dataDir = fullfile(vl_rootnn, 'data') ;
+opts.expDir = fullfile(vl_rootnn, 'exp') ;
+opts.imdbPath = fullfile(vl_rootnn, 'data', 'imdbs', 'imdb-eb.mat');
+opts.modelPath = fullfile(vl_rootnn, 'exp', 'net.mat') ;
+opts.proposalType = 'eb' ;
+opts.proposalDir = fullfile(vl_rootnn, 'data','EdgeBoxes') ;
 
 % if you have limited gpu memory (<6gb), you can change the next 2 params
 opts.maxNumProposals = inf; % limit number
