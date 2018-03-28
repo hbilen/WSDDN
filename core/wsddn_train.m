@@ -98,7 +98,8 @@ nopts.softmaxTempCls = opts.softmaxTempCls; % softmax temp for cls
 nopts.softmaxTempDet = opts.softmaxTempDet; % softmax temp for det
 
 nopts.averageImage = reshape(rgbMean,[1 1 3]) ;
-nopts.rgbVariance = 0.1 * rgbDeviation ;
+% nopts.rgbVariance = 0.1 * rgbDeviation ;
+nopts.rgbVariance = [] ;
 nopts.numClasses = numel(imdb.classes.name) ;
 nopts.classNames = imdb.classes.name ;
 
