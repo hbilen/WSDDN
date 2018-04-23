@@ -29,6 +29,13 @@ opts.train.expDir = opts.expDir ;
 % -------------------------------------------------------------------------
 %                                                    Network initialization
 % -------------------------------------------------------------------------
+
+if ~exist(opts.modelPath, 'file')
+  url = 'http://groups.inf.ed.ac.uk/hbilen-data/data/WSDDN/wsddn.mat' ;
+  fprintf('Downloading %s to %s\n', url, opts.modelPath) ;
+  urlwrite(url, opts.modelPath) ;
+end
+
 net = load(opts.modelPath);
 net = dagnn.DagNN.loadobj(net) ;
 
