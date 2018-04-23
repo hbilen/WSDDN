@@ -44,9 +44,15 @@ else
   bopts = net.meta.normalization;
 end
 
-bopts.interpolation = 'bilinear';
+bopts.rgbVariance = [] ;
+bopts.interpolation = net.meta.normalization.interpolation;
+bopts.jitterBrightness = 0 ;
 bopts.imageScales = opts.imageScales;
 bopts.numThreads = opts.numFetchThreads;
+bs = find(arrayfun(@(a) isa(a.block, 'dagnn.BiasSamples'), net.layers)==1);
+bopts.addBiasSamples = ~isempty(bs) ;
+bopts.vgg16 = any(arrayfun(@(a) strcmp(a.name, 'relu5'), net.layers)==1) ;
+
 % -------------------------------------------------------------------------
 %                                                   Database initialization
 % -------------------------------------------------------------------------
@@ -54,7 +60,7 @@ fprintf('loading imdb...');
 if exist(opts.imdbPath,'file')==2
   imdb = load(opts.imdbPath) ;
 else
-  imdb = cnn_voc07_eb_setup_data('dataDir',opts.dataDir, ...
+  imdb = setup_voc07_eb('dataDir',opts.dataDir, ...
     'proposalDir',opts.proposalDir,'loadTest',1);
     
   save(opts.imdbPath,'-struct', 'imdb', '-v7.3');
@@ -75,7 +81,7 @@ cats = VOCopts.classes;
 ovTh = 0.4; % nms threshold
 scTh = 0.1; % det confidence threshold
 
-bopts.useGpu = numel(opts.train.gpus) >  0 ;
+bopts.useGpu = numel(opts.gpu) >  0 ;
 
 detLayer = find(arrayfun(@(a) strcmp(a.name, 'xTimes'), net.vars)==1);
 
@@ -116,6 +122,7 @@ for t=1:numel(testIdx)
     fprintf('%s %.2f\n',cats{cls},boxesSc(1,5));
   end
   imshow(im);
+  pause() ;
   if exist('zs_dispFig', 'file'), zs_dispFig ; end
 end
 
@@ -127,11 +134,13 @@ function inputs = getBatch(opts, imdb, batch, scale, flip)
 
 opts.scale = scale;
 opts.flip = flip;
+is_vgg16 = opts.vgg16 ;
+opts = rmfield(opts,'vgg16') ;
 
 images = strcat([imdb.imageDir filesep], imdb.images.name(batch)) ;
 opts.prefetch = (nargout == 0);
 
-[im,rois] = cnn_wsddn_get_batch(images, imdb, batch, opts);
+[im,rois] = wsddn_get_batch(images, imdb, batch, opts);
 
 
 rois = single(rois');
@@ -139,18 +148,37 @@ if opts.useGpu > 0
   im = gpuArray(im) ;
   rois = gpuArray(rois) ;
 end
+rois = rois([1 3 2 5 4],:) ;
 
+
+ss = [16 16] ;
+if is_vgg16
+  o0 = 8.5 ;
+  o1 = 9.5 ;
+else
+  o0 = 18 ;
+  o1 = 9.5 ;
+end
+rois = [ rois(1,:);
+        floor((rois(2,:) - o0 + o1) / ss(1) + 0.5) + 1;
+        floor((rois(3,:) - o0 + o1) / ss(2) + 0.5) + 1;
+        ceil((rois(4,:) - o0 - o1) / ss(1) - 0.5) + 1;
+        ceil((rois(5,:) - o0 - o1) / ss(2) - 0.5) + 1];
+
+      
 inputs = {'input', im, 'rois', rois} ;
   
   
-if isfield(imdb.images,'boxScores')
+if opts.addBiasSamples && isfield(imdb.images,'boxScores')
   boxScore = reshape(imdb.images.boxScores{batch},[1 1 1 numel(imdb.images.boxScores{batch})]);
   inputs{end+1} = 'boxScore';
   inputs{end+1} = boxScore ; 
 end
 
+
 % -------------------------------------------------------------------------
 function imdb = fixBBoxes(imdb, minSize, maxNum)
+% -------------------------------------------------------------------------
 
 for i=1:numel(imdb.images.name)
   bbox = imdb.images.boxes{i};
