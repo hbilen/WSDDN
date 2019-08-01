@@ -55,7 +55,7 @@ bopts.imageScales = opts.imageScales;
 bopts.numThreads = opts.numFetchThreads;
 bs = find(arrayfun(@(a) isa(a.block, 'dagnn.BiasSamples'), net.layers)==1);
 bopts.addBiasSamples = ~isempty(bs) ;
-bopts.vgg16 = any(arrayfun(@(a) strcmp(a.name, 'relu5'), net.layers)==1) ;
+bopts.vgg16 = any(arrayfun(@(a) strcmp(a.name, 'relu5_1'), net.layers)==1) ;
 % -------------------------------------------------------------------------
 %                                                   Database initialization
 % -------------------------------------------------------------------------
