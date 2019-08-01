@@ -137,7 +137,7 @@ bopts.numThreads = opts.numFetchThreads;
 bopts.addLossSmooth = opts.addLossSmooth;
 bopts.addBiasSamples = opts.addBiasSamples;
 bopts.maxScale = opts.maxScale ;
-bopts.vgg16 = any(arrayfun(@(a) strcmp(a.name, 'relu5'), net.layers)==1) ;
+bopts.vgg16 = any(arrayfun(@(a) strcmp(a.name, 'relu5_1'), net.layers)==1) ;
 %% -------------------------------------------------------------------
 %                                                                Train
 % --------------------------------------------------------------------
